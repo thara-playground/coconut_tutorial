@@ -1,0 +1,53 @@
+
+data vector(pts):
+
+    def __new__(cls, *pts):
+        if len(pts) == 1 and pts[0] `isinstance` vector:
+            return pts[0]
+        else:
+            return pts |> tuple |> datamaker(cls)
+
+    def __abs__(self):
+        return self.pts |> map$((x) -> x**2) |> sum |> ((s) -> s**0.5)
+
+    def __add__(self, other):
+        vector(other_pts) = other
+        assert len(other_pts) == len(self.pts)
+        return map((+), self.pts, other_pts) |*> vector
+
+    def __sub__(self, other):
+        vector(other_pts) = other
+        assert len(other_pts) == len(self.pts)
+        return map((-), self.pts, other_pts) |*> vector
+
+    def __neg__(self):
+        return self.pts |> map$((-)) |*> vector
+
+    def __eq__(self, other):
+        """Compare whether two vectors are equal."""
+        match vector(=self.pts) in other:
+            return True
+        else:
+            return False
+
+    def __mul__(self, other):
+        match vector(other_pts) in other:
+            assert len(other_pts) == len(self.pts)
+            return map((*), self.pts, other_pts) |> sum # dot product
+        else:
+            return self.pts |> map$((*)$(other)) |*> vector # scalar multiple
+
+    def __rmul__(self, other):
+        return self * other
+
+vector(1, 2, 3) |> print
+vector(4, 5) |> vector |> print
+vector(3, 4) |> abs |> print
+vector(1, 2) + vector(2, 3) |> print
+vector(2, 2) - vector(0, 1) |> print
+-vector(1, 3) |> print
+(vector(1, 2) == "string") |> print
+(vector(1, 2) == vector(3, 4)) |> print
+(vector(2, 4) == vector(2, 4)) |> print
+2*vector(1, 2) |> print
+vector(1, 2) * vector(1, 3) |> print
