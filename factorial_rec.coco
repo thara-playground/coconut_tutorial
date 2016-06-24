@@ -1,0 +1,16 @@
+
+@recursive
+def factorial(n, acc=1):
+    case n:
+        match 0:
+            return acc
+        match _ is int if n > 0:
+            return factorial(n - 1, acc * n)
+    else:
+        raise TypeError("the argument to factorial must be an integer >= 0")
+
+#-1 |> factorial |> print
+#0.5 |> factorial |> print
+0 |> factorial |> print
+3 |> factorial |> print
+
